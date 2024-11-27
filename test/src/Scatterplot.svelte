@@ -3,10 +3,10 @@
 
     export let data;
     export let fullData;
-    export let variable;
     export let filter;
     export let update;
-    export let criteria;
+    export let x;
+    export let y;
 
     let margin = {top: 10, right: 80, bottom: 30, left: 60};
     let width = 500;
@@ -18,29 +18,12 @@
     let xAxis;
     let yAxis;
 
-    let tempCriteria = ['Topic alignment',
- 'Comprehensive Coverage',
- 'Required Attribute',
- 'Data Ranges',
- 'Patterns',
- 'Granularity',
- 'Collection Timeframe',
- 'Update Frequency',
- 'Composition of Data Fields',
- 'Sample Data',
- 'Methods Used',
- 'Good Practices Adherence',
- 'Unusable Data',
- 'Completeness',
- 'Access to the Full Dataset',
- 'Suitable Format',
- 'High Quality Supplements',
- 'Data Provider Communication',
- 'Reputable Source',
- 'Recommendations',
- 'Popular Dataset',
- 'Methods Comply with Legal Requirements',
- 'Access Terms'];
+    const formatNumber = (value) => {
+        if (value >= 1000) {
+            return d3.format(".2s")(value);
+        }
+        return value;
+    }
 
     const brush = d3.brushX()
         .extent([[0, 0], [chartW, chartH]])
@@ -72,24 +55,17 @@
     
     $: xScale = d3.scaleLinear()
         .range([0, chartW])
-        .domain([0, fullData.length]);
-    // $: binData = d3.histogram()
-    //     .value((d) => d['mentioned'])
-    //     .domain(xScale.domain())
-        // .thresholds(xScale.ticks(10));
-    // $: backgroundBins = binData(fullData);
-    // $: bins = binData(data);
-    // $: yScale = d3.scaleLinear()
-    //     .range([chartH, 0])
-    //     .domain([0, d3.max(backgroundBins, (d) => d.length)]);
-    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(fullData, (d) => d.count)])
+        .domain([0, d3.max(fullData, (d) => d[x])]);
+    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(fullData, (d) => d[y])])
     $: {	
             // d3.select(brushLayer)
             //     .call(brush);
             d3.select(xAxis)
-                .call(d3.axisBottom(xScale));
+            .call(d3.axisBottom(xScale)
+                    .ticks(10)
+                    .tickFormat(formatNumber));
             d3.select(yAxis)
-                .call(d3.axisLeft(yScale));
+                .call(d3.axisLeft(yScale).tickFormat(formatNumber));
         }
 
     //$: console.log(fullData[0]['mentioned']);
@@ -100,29 +76,15 @@
         <g transform="translate({margin.left}, {margin.top})">
             {#each fullData as d, i}
                 <circle class = "backgroundbar"
-                    cx={xScale(d.idx)} 
-                    cy={yScale(d.count)}
-                    r="6"/>
+                    cx={xScale(d[x])} 
+                    cy={yScale(d[y])}
+                    r="4"/>
             {/each}
-            {#each data as d, i}
+            <!-- {#each data as d, i}
                 <circle class = "bar"
-                    cx={xScale(d.idx)} 
-                    cy={yScale(d.count)}
-                    r="6"/>
-            {/each}
-            <!-- {#each fullData as d, i}
-                <rect class = "backgroundbar"
-                    x={xScale(i)} 
-                    y={yScale(d.count)}
-                    width={xScale(i)-xScale(i-1)}
-                    height={chartH - yScale(d.count)}/>
-            {/each}
-            {#each fullData as d, i}
-                <rect class = "bar"
-                    x={xScale(i)} 
-                    y={yScale(d.count)}
-                    width={xScale(i)-xScale(i-1)}
-                    height={chartH - yScale(d.count)}/>
+                    cx={xScale(d[x])} 
+                    cy={yScale(d[y])}
+                    r="4"/>
             {/each} -->
             
         </g>

@@ -3,19 +3,27 @@
 
     export let data;
     export let fullData;
-    export let variable;
+    
     export let filter;
     export let update;
+    export let x;
 
-    let margin = {top: 10, right: 80, bottom: 30, left: 60};
-    let width = 600;
-    let height = 300;
+    let margin = {top: 30, right: 30, bottom: 30, left: 30};
+    let width = 400;
+    let height = 200;
     let chartW = width - margin.left - margin.right;
     let chartH = height - margin.top - margin.bottom;
 
     let brushLayer;
     let xAxis;
     let yAxis;
+    const formatNumber = (value) => {
+        if (value >= 1000) {
+            return d3.format(".2s")(value);
+        }
+        return value;
+    }
+
 
     const brush = d3.brushX()
         .extent([[0, 0], [chartW, chartH]])
@@ -23,41 +31,13 @@
         .on("end", brushended);        
 
     function brushed(event) {
-        // var extent = brush.extent();
-        // if (!xScale.invert) {
-        //     var d = xScale.domain(),
-        //     r = xScale.range();
-        //     extent = extent.map(function(e) { return d[d3.bisect(r, e) - 1]; });
-        // }
+        
         if (event && event.selection) {
             
             filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
             //console.log(filter);
             update();
         }
-        
-        if (event && event.selection) {
-        // If xScale is ordinal, handle the mapping of brush selection to domain values
-        if (!xScale.invert) {
-            const domain = xScale.domain();
-            const range = xScale.range();
-            
-            // Convert the selection into indices for the domain array based on the range
-            const startIndex = d3.bisectLeft(range, event.selection[0]);
-            const endIndex = d3.bisectRight(range, event.selection[1]);
-            
-            // Ensure indices are within the valid domain range
-            const startValue = domain[Math.max(0, startIndex)];
-            const endValue = domain[Math.min(domain.length - 1, endIndex - 1)];
-            
-            filter = [startValue, endValue];
-        } else {
-            // For continuous scales, use invert as usual
-            filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
-        }
-        update(); // Call update with the new filter range
-    }
-        // xScale.domain(brush.empty() ? d : extent);
     }
 
     function brushended(event) {
@@ -67,24 +47,27 @@
         }
        
     }
-
+    
+    
     $: xScale = d3.scaleLinear()
         .range([0, chartW])
-        .domain(d3.extent(fullData.map((d) => d.properties[variable])));
+        .domain([0, d3.max(fullData, (d) => d[x])]);
     $: binData = d3.histogram()
-        .value((d) => d.properties[variable])
+        .value((d) => d[x])
         .domain(xScale.domain())
         .thresholds(xScale.ticks(10));
     $: backgroundBins = binData(fullData);
-    $: bins = binData(data);
+    // $: bins = binData(data);
     $: yScale = d3.scaleLinear()
         .range([chartH, 0])
         .domain([0, d3.max(backgroundBins, (d) => d.length)]);
     $: {	
-            d3.select(brushLayer)
-                .call(brush);
+            // d3.select(brushLayer)
+            //     .call(brush);
             d3.select(xAxis)
-                .call(d3.axisBottom(xScale));
+            .call(d3.axisBottom(xScale)
+                    .ticks(10)
+                    .tickFormat(formatNumber));
             d3.select(yAxis)
                 .call(d3.axisLeft(yScale));
         }
@@ -93,20 +76,33 @@
 <main>
     <svg {width} {height}>
         <g transform="translate({margin.left}, {margin.top})">
-            {#each backgroundBins as d}
+            <!-- {#each fullData as d, i}
+                <circle class = "bar"
+                    cx={xScale(i)} 
+                    cy={yScale(d.count)}
+                    r="6"/>
+            {/each}
+            {#each fullData as d, i}
+                <circle class = "backgroundbar"
+                    cx={xScale(i)} 
+                    cy={yScale(d.count)}
+                    r="6"/>
+            {/each} -->
+            {#each backgroundBins as d, i}
                 <rect class = "backgroundbar"
-                    x={xScale(d.x0)} 
-                    y={yScale(d.length)}
-                    width={xScale(d.x1) - xScale(d.x0)}
-                    height={chartH - yScale(d.length)}/>
+                x={xScale(d.x0)} 
+                y={yScale(d.length)}
+                width={xScale(d.x1) - xScale(d.x0)}
+                height={chartH - yScale(d.length)}/>
             {/each}
-            {#each bins as d}
+            <!-- {#each fullData as d, i}
                 <rect class = "bar"
-                    x={xScale(d.x0)} 
-                    y={yScale(d.length)}
-                    width={xScale(d.x1) - xScale(d.x0)}
-                    height={chartH - yScale(d.length)}/>
-            {/each}
+                    x={xScale(i)} 
+                    y={yScale(d.count)}
+                    width={xScale(i)-xScale(i-1)}
+                    height={chartH - yScale(d.count)}/>
+            {/each} -->
+            
         </g>
 
         <g transform="translate({margin.left}, {margin.top})"
@@ -123,11 +119,13 @@
 <style>
     .bar {
         fill: goldenrod;
+        opacity: 0.7;
         stroke: white;
         stroke-width: 1px;
     }
 
     .backgroundbar {
         fill: grey;
+        opacity: 0.7;
     }
  </style>

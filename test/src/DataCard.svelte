@@ -2,7 +2,8 @@
     import * as d3 from 'd3';
     import Summary from './Summary.svelte';
     import Heatmap from './Heatmap.svelte';
-    import Histogram2 from './Histogram2.svelte';
+    import Histogram from './Histogram.svelte';
+    import Scatterplot from './Scatterplot.svelte';
     export let data;
     export let fullData;
     export let numCount;
@@ -23,7 +24,7 @@
                 <!-- {#each Array(numCount) as _, j}
                     {#if (i != j)} -->
                         <div class="histogram-item">
-                            <Histogram2 
+                            <Histogram 
                                 data={data} 
                                 fullData={fullData} 
                                 x={numArr[i]} 
@@ -31,6 +32,20 @@
                         </div>
                     <!-- {/if}
                 {/each} -->
+            {/each}
+            {#each Array(numCount) as _, i}
+                {#each Array(numCount) as _, j}
+                    {#if (i > j)}
+                        <div class="histogram-item">
+                            <Scatterplot 
+                                data={data} 
+                                fullData={fullData} 
+                                x={numArr[i]} 
+                                y={numArr[j]} 
+                            />
+                        </div>
+                    {/if}
+                {/each}
             {/each}
         </div>
     </div>
@@ -53,6 +68,7 @@
         width: 300px; 
         min-height: 120px; /* Ensure space for at least 6 lines of text */
         padding: 10px;
+        white-space: normal;
         box-sizing: border-box; /* Include padding in total dimensions */
         border: 1px solid #ddd;
     }
@@ -68,7 +84,7 @@
     /* Each histogram item */
     .histogram-item {
         flex-shrink: 0;
-        width: 500px; /* Set a consistent width for each histogram */
+        width: 400px; /* Set a consistent width for each histogram */
         height: 200px; /* Adjust height as needed */
     }
 

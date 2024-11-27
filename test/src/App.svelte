@@ -3,10 +3,9 @@
 	import {onMount} from 'svelte';
   
   import Map from './Map.svelte';
-  import Histogram from './Histogram.svelte';
   import Heatmap from './Heatmap.svelte';
   import Scatterplot from './Scatterplot.svelte';
-  import Histogram2 from './Histogram2.svelte';
+  import Histogram from './Histogram.svelte';
   import BarChart from './BarChart.svelte';
   import Parallel from './Parallel.svelte';
   import Search from './Search.svelte';
@@ -154,7 +153,7 @@
     <!-- <div class="map"><Heatmap data={data} fullData={fullData}/></div> -->
     <!-- <div><Scatterplot data={data} fullData={fullData} criteria={criteria}/></div>
      -->
-    <div><Histogram2 data={data} fullData={fullData}/></div>
+    <div><Histogram data={data} fullData={fullData}/></div>
     <!-- <div><BarChart data={data} fullData={fullData} criteria={criteria} update={updateData} bind:filter={filter1}/></div> -->
     <div><Parallel data={data} fullData={fullData} criteria={criteria} update={updateData} bind:filter={filter1}/></div>
   </div>
