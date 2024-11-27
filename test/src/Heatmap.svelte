@@ -6,8 +6,8 @@
     // export let filter;
     // export let update;
 
-    let width = 700;
-    let height = 500;
+    let width = 300;
+    let height = 240;
     var margin = {top: 30, right: 60, bottom: 30, left: 150},
         chartW = width - margin.left - margin.right,
         chartH = height - margin.top - margin.bottom;

@@ -3,10 +3,10 @@
 
     export let data;
     export let fullData;
-    export let variable;
+    
     export let filter;
     export let update;
-    export let criteria;
+    export let x;
 
     let margin = {top: 10, right: 80, bottom: 30, left: 60};
     let width = 500;
@@ -18,29 +18,6 @@
     let xAxis;
     let yAxis;
 
-    let tempCriteria = ['Topic alignment',
- 'Comprehensive Coverage',
- 'Required Attribute',
- 'Data Ranges',
- 'Patterns',
- 'Granularity',
- 'Collection Timeframe',
- 'Update Frequency',
- 'Composition of Data Fields',
- 'Sample Data',
- 'Methods Used',
- 'Good Practices Adherence',
- 'Unusable Data',
- 'Completeness',
- 'Access to the Full Dataset',
- 'Suitable Format',
- 'High Quality Supplements',
- 'Data Provider Communication',
- 'Reputable Source',
- 'Recommendations',
- 'Popular Dataset',
- 'Methods Comply with Legal Requirements',
- 'Access Terms'];
 
     const brush = d3.brushX()
         .extent([[0, 0], [chartW, chartH]])
@@ -48,12 +25,7 @@
         .on("end", brushended);        
 
     function brushed(event) {
-        // var extent = brush.extent();
-        // if (!xScale.invert) {
-        //     var d = xScale.domain(),
-        //     r = xScale.range();
-        //     extent = extent.map(function(e) { return d[d3.bisect(r, e) - 1]; });
-        // }
+        
         if (event && event.selection) {
             
             filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
@@ -70,19 +42,20 @@
        
     }
     
+    
     $: xScale = d3.scaleLinear()
         .range([0, chartW])
-        .domain([0, d3.max(fullData, (d) => d.count)]);
+        .domain([0, d3.max(fullData, (d) => d[x])]);
     $: binData = d3.histogram()
-        .value((d) => d.count)
+        .value((d) => d[x])
         .domain(xScale.domain())
         .thresholds(xScale.ticks(13));
     $: backgroundBins = binData(fullData);
     // $: bins = binData(data);
-    // $: yScale = d3.scaleLinear()
-    //     .range([chartH, 0])
-    //     .domain([0, d3.max(backgroundBins, (d) => d.length)]);
-    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, 12])
+    $: yScale = d3.scaleLinear()
+        .range([chartH, 0])
+        .domain([0, d3.max(backgroundBins, (d) => d.length)]);
+    // $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(fullData, (d) => d[y])]);
     $: {	
             // d3.select(brushLayer)
             //     .call(brush);

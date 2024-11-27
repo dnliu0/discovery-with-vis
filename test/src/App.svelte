@@ -8,14 +8,20 @@
   import Scatterplot from './Scatterplot.svelte';
   import Histogram2 from './Histogram2.svelte';
   import BarChart from './BarChart.svelte';
-    import Parallel from './Parallel.svelte';
-    import Search from './Search.svelte';
+  import Parallel from './Parallel.svelte';
+  import Search from './Search.svelte';
+  import DataCard from './DataCard.svelte';
 
 	let data = [];
-  let data2 = [];
   let fullData = [];
   let filter1 = [];
   let filter2 = [];
+  let count = 0;
+  let numCount = 0;
+  let strCount = 0;
+  let numArr = [];
+  let strArr = [];
+  
   let cuisine_list = ['American',
                       'Chinese',
                       'Pizza',
@@ -63,179 +69,47 @@
     //load data from 
     let table = d3.csv('https://raw.githubusercontent.com/nl4dv/nl4dv/master/examples/assets/data/movies-w-year.csv', (d) => ({
           ...d,
-          //'ZIPCODE': d['ZIPCODE'].toString().slice(0, 5),
-          // 'Information Used' : d['Information Used'].split(', '), 
-          // 'Information Used_N' : d['Information Used_N'].split(', '), 
+          'IMDB Rating': + d['IMDB Rating'],
         }));
 
     
     await Promise.all([table]).then((values) => {
-      // console.log(values);
+      console.log(values);
       let table = values[0];
-      let aspects = [];
-      criteria = Object.keys(table[0]);
-      let criteriaMentioned = [];
+      console.log(table)
+      let cols = [];
       for (let i = 0; i < 68; i++) {
         data.push({});
         data[i]['idx'] = i;
-        let count = 0;
         Object.keys(table[0]).forEach(o => {
           if (o) {
-            data[i][o] = +table[i][o];
-            if (table[i][o] === "1") {
-              count += 1;
-              criteriaMentioned.push(o)
+            data[i][o] = table[i][o];
+            if (+data[i][o]) {
+              data[i][o] = +data[i][o];
             }
+            count += 1;
           }
-          
         });
-        data[i]['count'] = count;
-        data[i]['mentioned'] = criteriaMentioned;
-        criteriaMentioned = [];
-        // data[i]['Information Used'] = table[i]['Information Used'];
-        // if (table[i]['Data Meet Purpose'] === "Yes") {
-        //   aspects.push('Data Meet Purpose');
-        // }
-        // if (table[i]['Data Quality Check'] === "Yes") {
-        //   aspects.push('Data Quality Check');
-        // }
-        // if (table[i]['Pay Access Decision'] === "Yes") {
-        //   aspects.push('Pay Access Decision');
-        // }
-        // data[i]['aspects'] = aspects;
-        // aspects = [];
-        // data[i]['Data Meet Purpose'] = table[i]['Data Meet Purpose'];
-        // data[i]['Data Quality Check'] = table[i]['Data Quality Check'];
-        // data[i]['Pay Access Decision'] = table[i]['Pay Access Decision'];
-        // data[i]['Heatmap'] = getCount();
-        // data[i]['Information Used_N'] = table[i]['Information Used_N'];
-        // data[i]['Data Meet Purpose_N'] = table[i]['Data Meet Purpose_N'];
-        // data[i]['Data Quality Check_N'] = table[i]['Data Quality Check_N'];
-        // data[i]['Pay Access Decision_N'] = table[i]['Pay Access Decision_N'];
+        // data[i]['count'] = count;
+        // data[i]['numCount'] = numCount;
+        // data[i]['strCount'] = count - numCount;
+        // data[i]['numArr'] = numArr;
+        // data[i]['strArr'] = strArr;
       }
+      Object.keys(table[0]).forEach(o => {
+        if (+table[0][o]) {
+          numCount += 1;
+          numArr.push(o);
+        } else {
+          strCount += 1;
+          strArr.push(o);
+        }
+      })
       console.log(data);
-      //console.log(data);
       fullData = [...data];
     });
 	});
-  function getDiversity(table){
-    let zip_count = {};
-    for (let k = 0; k < table.length; k++) {
-      let curr_zip = table[k]['ZIPCODE'];
-      let cuisine = table[k]['CUISINE DESCRIPTION'];
-      if (!zip_count[curr_zip]) {
-            zip_count[curr_zip] = {};
-      }
-          if (zip_count[curr_zip][cuisine]) {
-            zip_count[curr_zip][cuisine] += 1;
-          } else {
-            zip_count[curr_zip][cuisine] = 1;
-          }
-              
-    }
-    let diversity_count = {};
-      
-      for (let z in zip_count) {
-          diversity_count[z] = Object.keys(zip_count[z]).length;
-      }
-      return diversity_count;  
-  }
 
-  function getCount(){
-    let heatmapData = [];
-    let combineMap = new Map();
-    fullData.forEach(d => {
-        uniqueAspects.forEach(a => {
-            uniqueInfoUsed.forEach(i => {
-            if (d['aspects'].includes(a) && d['Information Used'].includes(i)) {
-                let key = `${a}-${i}`;
-                if (!combineMap.has(key)) {
-                    combineMap.set(key, 0);
-                    heatmapData.push({ aspect: a, info: i, count: 0 });
-                } else {
-                    combineMap.set(key, combineMap.get(key) + 1);
-                    let entry = heatmapData.find(entry => entry.aspect === a && entry.info === i);
-                    if (entry) {
-                        entry.count++; 
-                    }
-                }
-            }
-            })
-        })
-    });
-  
-}
-
-  function countByCuisine(table){
-    let zip_count = {};
-        for (let k = 0; k < table.length; k++) {
-          let curr_zip = table[k]['ZIPCODE'];
-          let cuisine = table[k]['CUISINE DESCRIPTION'];
-          
-          if (!zip_count[curr_zip]) {
-            zip_count[curr_zip] = {};
-          }
-          if (zip_count[curr_zip][cuisine]) {
-            zip_count[curr_zip][cuisine] += 1;
-            
-          } else {
-            zip_count[curr_zip][cuisine] = 1;
-          }
-        }
-        let max_cuisine_per_zip = {};
-        for (let z in zip_count) {
-          let cuisine_types = zip_count[z];
-          let max_cuisine;
-          let max_num = -1;
-          for (let a in cuisine_types) {
-              if (cuisine_types[a] > max_num) {
-                  max_cuisine = a;
-                  max_num = cuisine_types[a];
-              }
-          }
-          max_cuisine_per_zip[z] = {
-              cuisine: max_cuisine,
-              count: max_num
-          };
-      }
-      return max_cuisine_per_zip;
-  
-}
-
-  function countByAnimalType(table){
-    let zip_count = {};
-        for (let k = 0; k < table.length; k++) {
-          let curr_zip = table[k]['Incident Zip'];
-          let animal = table[k]['Descriptor'];
-          
-          if (!zip_count[curr_zip]) {
-            zip_count[curr_zip] = {};
-          }
-          if (zip_count[curr_zip][animal]) {
-            zip_count[curr_zip][animal] += 1;
-            
-          } else {
-            zip_count[curr_zip][animal] = 1;
-          }
-        }
-        let max_animal_per_zip = {};
-        for (let z in zip_count) {
-          let animal_types = zip_count[z];
-          let max_animal;
-          let max_num = -1;
-          for (let a in animal_types) {
-              if (animal_types[a] > max_num) {
-                  max_animal = a;
-                  max_num = animal_types[a];
-              }
-          }
-          max_animal_per_zip[z] = {
-              animal: max_animal,
-              count: max_num
-          };
-      }
-      return max_animal_per_zip;
-  }
 
   function updateData(){
     //[filter1[0], filter1[1]]
@@ -248,20 +122,7 @@
         })
       });
     } else if (filter1.length > 0 && filter2.length == 0) {
-      let result = [];
-      let result2 = [];
-      // data2 = fullData.filter((d) => {
-      //     // Check if any elements of subInfo are mentioned
-          
-      //     let isMentioned = subInfo.some((m) => d.mentioned.includes(m));
-      //     if (isMentioned) {
-      //       let temp = { ...d };
-      //         // Update the mentioned property to include only elements that match subInfo
-      //         temp.mentioned = d.mentioned.filter(m => subInfo.includes(m));
-      //         return temp;
-      //     }
-      //     return isMentioned;
-      // });
+     
       data = fullData.filter((d) => {
         let isMentioned = subInfo.some((m) => d.mentioned.includes(m));
         // if (isMentioned) {
@@ -281,31 +142,19 @@
 </script>
 
 <main>
-  <!-- <h1>NYC Restaurants</h1> -->
-  <div class="flex-container row">
+  <div class="scroll">
+    <DataCard data={data} fullData={fullData} numArr={numArr} numCount={numCount} strCount={strCount} update={updateData} bind:filter={filter1} />
+  </div>
+  <div class="flex-container data-card row">
     <div class="scroll">
-      <div class="col">
-        <div class="sample-data"></div>
-      </div>
-      <div class="col">
-        <div class="sample-data"></div>
-      </div>
-      <div class="col">
-        <div class="sample-data"></div>
-      </div>
-      <div class="col">
-        <div class="sample-data"></div>
-      </div>
-      <div class="col">
-        <div class="sample-data"></div>
-      </div>
+      
     </div>
   </div>
   <div class="flex-container row">
     <!-- <div class="map"><Heatmap data={data} fullData={fullData}/></div> -->
     <!-- <div><Scatterplot data={data} fullData={fullData} criteria={criteria}/></div>
      -->
-    <div><Histogram2 data={data} fullData={fullData} criteria={criteria}/></div>
+    <div><Histogram2 data={data} fullData={fullData}/></div>
     <!-- <div><BarChart data={data} fullData={fullData} criteria={criteria} update={updateData} bind:filter={filter1}/></div> -->
     <div><Parallel data={data} fullData={fullData} criteria={criteria} update={updateData} bind:filter={filter1}/></div>
   </div>
@@ -346,12 +195,18 @@
 </main>
 
 <style>
+  .data-card {
+    height: 200px;
+    border: 1px solid #ccc;
+  }
   .search-bar {
     width: 100%;
+    
   }
   .sample-data {
     width: 300px;
-    height: 260px;
+    height: 100px;
+    
   }
   .sample-data:hover {
     box-shadow: 0px 10px 20px -18px;
@@ -360,6 +215,7 @@
     display: flex;
     justify-content: center;  
     height: 100%;
+    width: 100%;
     padding: 10px;
     gap: 0px;
   }
@@ -374,6 +230,23 @@
 
   .flex-container .col {
     flex-direction: column;  
+  }
+
+  .scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap; /* Prevent wrapping of child elements */
+    height: 250px; /* Adjust height as needed */
+    max-width: 100%; /* Constrain scroll container width to its parent */
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in size calculations */
+    border: 1px solid #ccc; /* Optional: border for clarity */
+  }
+
+  .scroll > div {
+    display: inline-block;
+    vertical-align: top; /* Align items to the top for better layout */
+    margin-right: 10px; /* Spacing between items */
   }
 
   .map { 
