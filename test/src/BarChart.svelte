@@ -3,20 +3,21 @@
 
     export let data;
     export let fullData;
-    export let variable;
-    export let filter;
-    export let update;
-    export let criteria;
+    // export let filter;
+    // export let update;
+    export let x;
+    export let y;
 
-    let margin = {top: 10, right: 80, bottom: 170, left: 60};
-    let width = 1000;
-    let height = 700;
+    let margin = {top: 10, right: 80, bottom: 35, left: 80};
+    let width = 500;
+    let height = 200;
     let chartW = width - margin.left - margin.right;
     let chartH = height - margin.top - margin.bottom;
 
     let brushLayer;
     let xAxis;
     let yAxis;
+
 
     let tempCriteria = ['Topic alignment',
                     'Comprehensive Coverage',
@@ -42,58 +43,32 @@
                     'Methods Comply with Legal Requirements',
                     'Access Terms'];
 
-    const brush = d3.brushX()
-        .extent([[0, 0], [chartW, chartH]])
-        .on("brush", brushed)
-        .on("end", brushended);        
 
-    function brushed(event) {
-        if (event) {
-            const range = xScale.domain().map(xScale);
-            const i0 = d3.bisectRight(range, event.selection[0]);
-            const i1 = d3.bisectRight(range, event.selection[1]);
-            filter = [i0, i1];
-            update();
-        }
-        // if (event && event.selection) {
-            
-        //     filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
-        //     //console.log(filter);
-        //     update();
-        // }
-    }
-
-    function brushended(event) {
-        if (event && !event.selection) {
-            filter = [];
-            update();
-        }
-       
-    }
     function makeData(data) {
         let barData = [];
-        tempCriteria.forEach(criterion => {
+        let uniqueX = Array.from(new Set(data.map(d => d[x])));
+        uniqueX.forEach(i => {
             let count = 0;
             data.forEach(d => {
-                // console.log(criterion.toString())
-                // console.log(d.mentioned)
-                if (d.mentioned.includes(criterion)) {
+                if (d[x]==(i)) {
                     count += 1;
                 }
             })
         barData.push({
-                criterion: criterion,
-                count: count
+                x: i,
+                y: count
             }) ;
             count = 0;
         });
         return barData;
     }
+
+
     
-  
-    $: xScale = d3.scaleBand(tempCriteria, [0, chartW]);
+    
+    $: xScale = d3.scaleBand(Array.from(new Set(barData.map(d => d.x))), [0, chartW]);
     $: barData = makeData(fullData);
-    $: partialBarData = makeData(data);
+    // $: partialBarData = makeData(data);
     // $: console.log(partialBarData)
     // d3.scaleLinear()
     //     .range([0, chartW])
@@ -108,16 +83,33 @@
     //     .range([chartH, 0])
     //     .domain([0, d3.max(backgroundBins, (d) => d.length)]);
 
-    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(barData, (d) => d.count)])
+    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(makeData(fullData), (d) => d.y)])
+    $: console.log(d3.max(makeData(fullData), (d) => d.y))
     $: {	
-            d3.select(brushLayer)
-                .call(brush);
+            // d3.select(brushLayer)
+            //     .call(brush);
             d3.select(xAxis)
-                .call(d3.axisBottom(xScale)).selectAll("text")
+                .call(d3.axisBottom(xScale))
+                .selectAll("text")
                 .attr("transform", "rotate(-45)")
                 .style("text-anchor", "end");
+            d3.select(xAxis).append('text')
+                    .text(x)
+                    .style("font-size", "11px")
+                    .style("font-weight", "bold")
+                    .style("fill", "black")
+                    .attr('x', (10 + chartW)/2)
+                    .attr('y', 30);
             d3.select(yAxis)
-                .call(d3.axisLeft(yScale));
+                .call(d3.axisLeft(yScale))
+                .append('text')
+                .text(y)
+                .style("font-size", "11px")
+                .style("font-weight", "bold")
+                .style("fill", "black")
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -chartH/2 + 60)
+                .attr('y', -38);;
         }
     //$: console.log(fullData[0]['mentioned']);
   
@@ -127,20 +119,21 @@
     <svg {width} {height}>
         <g transform="translate({margin.left}, {margin.top})">
             {#each barData as d, i}
+                {console.log(d.y)}
                 <rect class = "backgroundbar"
-                    x={7 + xScale(d.criterion)} 
-                    y={yScale(d.count)}
-                    width={24}
-                    height={chartH - yScale(d.count)}/>
+                    x={xScale(d.x)+4} 
+                    y={yScale(d.y)}
+                    width={chartW/xScale.domain().length-8}
+                    height={chartH - yScale(d.y)}/>
             {/each}
             <!-- {console.log(partialBarData)} -->
-            {#each partialBarData as d, i}
+            <!-- {#each partialBarData as d, i}
                 <rect class = "bar"
                     x={7 + xScale(d.criterion)} 
                     y={yScale(d.count)}
                     width={24}
                     height={chartH - yScale(d.count)}/>
-            {/each}
+            {/each} -->
             <!-- {#each fullData as d, i}
                 <rect class = "bar"
                     x={xScale(i)} 

@@ -142,7 +142,7 @@
 
 <main>
   <div class="scroll">
-    <DataCard data={data} fullData={fullData} numArr={numArr} numCount={numCount} strCount={strCount} update={updateData} bind:filter={filter1} />
+    <DataCard data={data} fullData={fullData} numArr={numArr} strArr={strArr} numCount={numCount} strCount={strCount} update={updateData} bind:filter={filter1} />
   </div>
   <div class="flex-container data-card row">
     <div class="scroll">

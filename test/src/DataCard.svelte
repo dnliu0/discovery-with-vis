@@ -1,14 +1,17 @@
 <script>
     import * as d3 from 'd3';
     import Summary from './Summary.svelte';
-    import Heatmap from './Heatmap.svelte';
     import Histogram from './Histogram.svelte';
     import Scatterplot from './Scatterplot.svelte';
+    import BarChart from './BarChart.svelte';
     export let data;
     export let fullData;
     export let numCount;
     export let numArr;
+    export let strArr;
     export let strCount;
+
+    
 </script>
 
 <main>
@@ -22,7 +25,7 @@
         <div class="histograms-container">
             {#each Array(numCount) as _, i}
                 <!-- {#each Array(numCount) as _, j}
-                    {#if (i != j)} -->
+                    {#if (i != j)} --> 
                         <div class="histogram-item">
                             <Histogram 
                                 data={data} 
@@ -45,6 +48,22 @@
                             />
                         </div>
                     {/if}
+                {/each}
+            {/each}
+            {#each Array(strCount) as _, i}
+                {#each Array(numCount) as _, j}
+                    {#if Array.from(new Set(data.map(d => d[strArr[i]]))).length <= 25}
+                        <div class="histogram-item"> 
+                            
+                            <BarChart
+                                data={data} 
+                                fullData={fullData} 
+                                x={strArr[i]} 
+                                y={numArr[j]} 
+                            />
+                            
+                        </div>
+                    {/if}  
                 {/each}
             {/each}
         </div>

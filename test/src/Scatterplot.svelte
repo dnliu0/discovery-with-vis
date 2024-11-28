@@ -8,7 +8,7 @@
     export let x;
     export let y;
 
-    let margin = {top: 10, right: 80, bottom: 30, left: 60};
+    let margin = {top: 10, right: 80, bottom: 35, left: 80};
     let width = 500;
     let height = 200;
     let chartW = width - margin.left - margin.right;
@@ -31,12 +31,6 @@
         .on("end", brushended);        
 
     function brushed(event) {
-        // var extent = brush.extent();
-        // if (!xScale.invert) {
-        //     var d = xScale.domain(),
-        //     r = xScale.range();
-        //     extent = extent.map(function(e) { return d[d3.bisect(r, e) - 1]; });
-        // }
         if (event && event.selection) {
             
             filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
@@ -63,12 +57,25 @@
             d3.select(xAxis)
             .call(d3.axisBottom(xScale)
                     .ticks(10)
-                    .tickFormat(formatNumber));
+                    .tickFormat(formatNumber))
+                    .append('text')
+                    .text(x)
+                    .style("font-size", "11px")
+                    .style("font-weight", "bold")
+                    .style("fill", "black")
+                    .attr('x', (10 + chartW)/2)
+                    .attr('y', 30);
             d3.select(yAxis)
-                .call(d3.axisLeft(yScale).tickFormat(formatNumber));
-        }
-
-    //$: console.log(fullData[0]['mentioned']);
+                .call(d3.axisLeft(yScale).tickFormat(formatNumber))
+                .append('text')
+                .text(y)
+                .style("font-size", "11px")
+                .style("font-weight", "bold")
+                .style("fill", "black")
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -chartH/2 + 60)
+                .attr('y', -38);
+            }
 </script>
 
 <main>
