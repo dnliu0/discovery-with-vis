@@ -35,7 +35,7 @@
                       'Japanese',
                       'Italian',
                       'Caribbean']
-  // let var1 = "percentWhite";
+
   let var1 = "diversity";
   let var3 = 'max_cuisine';
   let var2 = 'count';
