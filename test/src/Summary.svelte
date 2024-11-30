@@ -3,16 +3,7 @@
 </script>
 <main>
     <div class="data-card">
-        Lorem Ipsum is simply dummy text of the printing and 
-        typesetting industry. Lorem Ipsum has been the industry's 
-        standard dummy text ever since the 1500s, when an unknown 
-        printer took a galley of type and scrambled it to make a 
-        type specimen book. It has survived not only five centuries, 
-        but also the leap into electronic typesetting, remaining 
-        essentially unchanged. It was popularised in the 1960s with 
-        the release of Letraset sheets containing Lorem Ipsum passages, 
-        and more recently with desktop publishing software like Aldus 
-        PageMaker including versions of Lorem Ipsum.
+        The dataset spans films from 1996 to 2010 across genres like drama, comedy, and action, with budgets and revenues ranging from modest to blockbuster hits like "Titanic" and "The Dark Knight" grossing over $1 billion. Critical reception varies, with highly acclaimed films like "Inception" (Rotten Tomatoes: 87, IMDB: 9.1) and poorly received ones like "Disaster Movie" (Rotten Tomatoes: 2). It highlights trends such as the rise of superhero films and a steady audience interest in dramas and historical fiction, reflecting the evolving film industry's diversity and appeal.
     </div>
 </main>
 <style>

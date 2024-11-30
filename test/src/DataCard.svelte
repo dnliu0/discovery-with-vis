@@ -10,19 +10,23 @@
     export let numArr;
     export let strArr;
     export let strCount;
+    export let searchInput;
+    export let searchOutput;
 
     
 </script>
 
 <main>
+    <h4>Hollywood Movies Dataset (1996–2010)</h4>
     <div class="scroll-container">
+       
         <!-- Summary Component -->
         <div class="summary-container">
             <Summary />
         </div>
-
-        <!-- Histograms -->
+        
         <div class="histograms-container">
+            {#if !searchOutput}
             {#each Array(numCount) as _, i}
                 <!-- {#each Array(numCount) as _, j}
                     {#if (i != j)} --> 
@@ -31,6 +35,7 @@
                                 data={data} 
                                 fullData={fullData} 
                                 x={numArr[i]} 
+                                searchOutput={searchOutput}
                             />
                         </div>
                     <!-- {/if}
@@ -45,6 +50,7 @@
                                 fullData={fullData} 
                                 x={numArr[i]} 
                                 y={numArr[j]} 
+                                searchOutput={searchOutput}
                             />
                         </div>
                     {/if}
@@ -60,14 +66,41 @@
                                 fullData={fullData} 
                                 x={strArr[i]} 
                                 y={numArr[j]} 
+                                searchOutput={searchOutput}
                             />
                             
                         </div>
                     {/if}  
                 {/each}
             {/each}
+            {:else}
+                {#if searchOutput["0"].attributes[0] && searchOutput["0"].types[0] === "Q"}
+                        {#if searchOutput["0"].attributes[1]  && searchOutput["0"].types[0] === "Q"}
+                            <div class="histogram-item">
+                                <Scatterplot 
+                                    data={data} 
+                                    fullData={fullData} 
+                                    x={searchOutput["0"].attributes[0]} 
+                                    y={searchOutput["0"].attributes[1]} 
+                                />
+                            </div>
+                        {:else if searchOutput["0"].attributes[1]  && (searchOutput["0"].types[0] === "O" || searchOutput["0"].types[0] === "N")}
+                        <div class="histogram-item"> 
+                            <BarChart
+                                data={data} 
+                                fullData={fullData} 
+                                x={searchOutput["0"].attributes[0]} 
+                                y={searchOutput["0"].attributes[1]} 
+                            />
+                        </div>
+                        {/if}
+                        
+                {/if}
+            {/if}
         </div>
+       
     </div>
+    
 </main>
 
 <style>
@@ -119,5 +152,10 @@
 
     .scroll-container::-webkit-scrollbar-track {
         background-color: #f9f9f9;
+    }
+
+    h4 {
+        text-align: left;
+        padding-left: 8px;
     }
 </style>

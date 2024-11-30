@@ -4,9 +4,10 @@
     export let data;
     export let fullData;
     
-    export let filter;
-    export let update;
+    // export let filter;
+    // export let update;
     export let x;
+    export let searchOutput;
 
     let margin = {top: 30, right: 30, bottom: 30, left: 30};
     let width = 400;
@@ -25,28 +26,28 @@
     }
 
 
-    const brush = d3.brushX()
-        .extent([[0, 0], [chartW, chartH]])
-        .on("brush", brushed)
-        .on("end", brushended);        
+    // const brush = d3.brushX()
+    //     .extent([[0, 0], [chartW, chartH]])
+    //     .on("brush", brushed)
+    //     .on("end", brushended);        
 
-    function brushed(event) {
+    // function brushed(event) {
         
-        if (event && event.selection) {
+    //     if (event && event.selection) {
             
-            filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
-            //console.log(filter);
-            update();
-        }
-    }
+    //         filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
+    //         //console.log(filter);
+    //         update();
+    //     }
+    // }
 
-    function brushended(event) {
-        if (event && !event.selection) {
-            filter = [];
-            update();
-        }
+    // function brushended(event) {
+    //     if (event && !event.selection) {
+    //         filter = [];
+    //         update();
+    //     }
        
-    }
+    // }
     
     
     $: xScale = d3.scaleLinear()
@@ -64,12 +65,23 @@
     $: {	
             // d3.select(brushLayer)
             //     .call(brush);
+            if (searchOutput) {
+                d3.selectAll("text").remove();
+            }
             d3.select(xAxis)
             .call(d3.axisBottom(xScale)
                     .ticks(10)
-                    .tickFormat(formatNumber));
+                    .tickFormat(formatNumber))
+                    .append('text')
+                .text(x)
+                .style("font-size", "11px")
+                .style("font-weight", "bold")
+                .style("fill", "black")
+                .attr('x', (10 + chartW)/2)
+                .attr('y', 30);
             d3.select(yAxis)
-                .call(d3.axisLeft(yScale));
+                .call(d3.axisLeft(yScale))
+                
         }
 </script>
 

@@ -3,10 +3,11 @@
 
     export let data;
     export let fullData;
-    export let filter;
-    export let update;
+    // export let filter;
+    // export let update;
     export let x;
     export let y;
+    export let searchOutput;
 
     let margin = {top: 10, right: 80, bottom: 35, left: 80};
     let width = 500;
@@ -25,35 +26,36 @@
         return value;
     }
 
-    const brush = d3.brushX()
-        .extent([[0, 0], [chartW, chartH]])
-        .on("brush", brushed)
-        .on("end", brushended);        
+    // const brush = d3.brushX()
+    //     .extent([[0, 0], [chartW, chartH]])
+    //     .on("brush", brushed)
+    //     .on("end", brushended);        
 
-    function brushed(event) {
-        if (event && event.selection) {
+    // function brushed(event) {
+    //     if (event && event.selection) {
             
-            filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
-            //console.log(filter);
-            update();
-        }
-    }
+    //         filter = [xScale.invert(event.selection[0]), xScale.invert(event.selection[1])];
+    //         //console.log(filter);
+    //         update();
+    //     }
+    // }
 
-    function brushended(event) {
-        if (event && !event.selection) {
-            filter = [];
-            update();
-        }
+    // function brushended(event) {
+    //     if (event && !event.selection) {
+    //         filter = [];
+    //         update();
+    //     }
        
-    }
+    // }
     
     $: xScale = d3.scaleLinear()
         .range([0, chartW])
         .domain([0, d3.max(fullData, (d) => d[x])]);
     $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(fullData, (d) => d[y])])
     $: {	
-            // d3.select(brushLayer)
-            //     .call(brush);
+            if (searchOutput) {
+                d3.selectAll("text").remove();
+            }
             d3.select(xAxis)
             .call(d3.axisBottom(xScale)
                     .ticks(10)

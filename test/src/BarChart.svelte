@@ -7,8 +7,9 @@
     // export let update;
     export let x;
     export let y;
+    export let searchOutput;
 
-    let margin = {top: 10, right: 80, bottom: 35, left: 80};
+    let margin = {top: 10, right: 80, bottom: 75, left: 80};
     let width = 500;
     let height = 200;
     let chartW = width - margin.left - margin.right;
@@ -84,10 +85,14 @@
     //     .domain([0, d3.max(backgroundBins, (d) => d.length)]);
 
     $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(makeData(fullData), (d) => d.y)])
-    $: console.log(d3.max(makeData(fullData), (d) => d.y))
+    // $: console.log(d3.max(makeData(fullData), (d) => d.y))
     $: {	
             // d3.select(brushLayer)
             //     .call(brush);
+            if (searchOutput) {
+                d3.selectAll("text").remove();
+            }
+            
             d3.select(xAxis)
                 .call(d3.axisBottom(xScale))
                 .selectAll("text")
@@ -99,7 +104,7 @@
                     .style("font-weight", "bold")
                     .style("fill", "black")
                     .attr('x', (10 + chartW)/2)
-                    .attr('y', 30);
+                    .attr('y', 70);
             d3.select(yAxis)
                 .call(d3.axisLeft(yScale))
                 .append('text')
@@ -119,7 +124,6 @@
     <svg {width} {height}>
         <g transform="translate({margin.left}, {margin.top})">
             {#each barData as d, i}
-                {console.log(d.y)}
                 <rect class = "backgroundbar"
                     x={xScale(d.x)+4} 
                     y={yScale(d.y)}
