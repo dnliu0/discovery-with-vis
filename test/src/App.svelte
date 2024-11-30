@@ -25,16 +25,7 @@
   let searchInput;
   let searchOutput;
   
-  let cuisine_list = ['American',
-                      'Chinese',
-                      'Pizza',
-                      'Coffee/Tea',
-                      'Mexican',
-                      'Latin American',
-                      'Bakery Products/Desserts',
-                      'Japanese',
-                      'Italian',
-                      'Caribbean']
+  let cuisine_list = []
 
   let var1 = "diversity";
   let var3 = 'max_cuisine';
