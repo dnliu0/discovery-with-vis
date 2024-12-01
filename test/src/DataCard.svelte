@@ -4,6 +4,7 @@
     import Histogram from './Histogram.svelte';
     import Scatterplot from './Scatterplot.svelte';
     import BarChart from './BarChart.svelte';
+    import LineChart from './LineChart.svelte';
     export let data;
     export let fullData;
     export let numCount;
@@ -41,6 +42,20 @@
                     <!-- {/if}
                 {/each} -->
             {/each}
+            {#each Array(strCount) as _, i}
+                    {#if Array.from(new Set(data.map(d => d[strArr[i]]))).length <= 25}
+                        <div class="histogram-item"> 
+                            <BarChart
+                                data={data} 
+                                fullData={fullData} 
+                                x={strArr[i]} 
+                                y={''} 
+                                searchOutput={searchOutput}
+                            />
+                            
+                        </div>
+                    {/if}  
+            {/each}
             {#each Array(numCount) as _, i}
                 {#each Array(numCount) as _, j}
                     {#if (i > j)}
@@ -56,11 +71,25 @@
                     {/if}
                 {/each}
             {/each}
+            <!-- {#each Array(numCount) as _, i}
+                {#each Array(numCount) as _, j}
+                    {#if (i > j)}
+                        <div class="histogram-item">
+                            <LineChart 
+                                data={data} 
+                                fullData={fullData} 
+                                x={numArr[i]} 
+                                y={numArr[j]} 
+                                searchOutput={searchOutput}
+                            />
+                        </div>
+                    {/if}
+                {/each}
+            {/each} -->
             {#each Array(strCount) as _, i}
                 {#each Array(numCount) as _, j}
                     {#if Array.from(new Set(data.map(d => d[strArr[i]]))).length <= 25}
                         <div class="histogram-item"> 
-                            
                             <BarChart
                                 data={data} 
                                 fullData={fullData} 

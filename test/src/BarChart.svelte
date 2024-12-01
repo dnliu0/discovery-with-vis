@@ -18,6 +18,12 @@
     let brushLayer;
     let xAxis;
     let yAxis;
+    const formatNumber = (value) => {
+        if (value >= 1000) {
+            return d3.format(".2s")(value);
+        }
+        return value;
+    }
 
 
     let tempCriteria = ['Topic alignment',
@@ -44,7 +50,6 @@
                     'Methods Comply with Legal Requirements',
                     'Access Terms'];
 
-
     function makeData(data) {
         let barData = [];
         let uniqueX = Array.from(new Set(data.map(d => d[x])));
@@ -64,11 +69,30 @@
         return barData;
     }
 
+    function makeData2(data) {
+        let barData = [];
+        let uniqueX = Array.from(new Set(data.map(d => d[x])));
+        uniqueX.forEach(i => {
+            let count = 0;
+            data.forEach(d => {
+                if (d[x]==(i)) {
+                    count += d[y];
+                }
+            })
+        barData.push({
+                x: i,
+                y: count
+            }) ;
+            count = 0;
+        });
+        return barData;
+    }
+
 
     
     
     $: xScale = d3.scaleBand(Array.from(new Set(barData.map(d => d.x))), [0, chartW]);
-    $: barData = makeData(fullData);
+    $: barData = y ? makeData2(fullData) : makeData(fullData);
     // $: partialBarData = makeData(data);
     // $: console.log(partialBarData)
     // d3.scaleLinear()
@@ -84,7 +108,7 @@
     //     .range([chartH, 0])
     //     .domain([0, d3.max(backgroundBins, (d) => d.length)]);
 
-    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(makeData(fullData), (d) => d.y)])
+    $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(y ? makeData2(fullData) : makeData(fullData), (d) => d.y)])
     // $: console.log(d3.max(makeData(fullData), (d) => d.y))
     $: {	
             // d3.select(brushLayer)
@@ -106,7 +130,7 @@
                     .attr('x', (10 + chartW)/2)
                     .attr('y', 70);
             d3.select(yAxis)
-                .call(d3.axisLeft(yScale))
+                .call(d3.axisLeft(yScale).tickFormat(formatNumber))
                 .append('text')
                 .text(y)
                 .style("font-size", "11px")
