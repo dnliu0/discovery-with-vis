@@ -145,12 +145,16 @@
                     </div>
                     {:else}
                         <div class="histogram-item"> 
+                            {#if Array.from(new Set(data.map(d => d[searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0]]))).length <= 25}
                             <BarChart
                                 data={data} 
                                 fullData={fullData} 
                                 x={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0]} 
                                 y={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q")]} 
                             />
+                            {:else} 
+                                <p>There are too many unique values in the selected {searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0} column to be visualized effectively. </p>
+                            {/if}
                         </div>
                     {/if}
                 {:else if searchOutput["0"].types.length > 2}
