@@ -18,6 +18,7 @@
     let brushLayer;
     let xAxis;
     let yAxis;
+    let tooltip;
     const formatNumber = (value) => {
         if (value >= 1000) {
             return d3.format(".2s")(value);
@@ -25,6 +26,21 @@
         return value;
     }
 
+    function showTooltip(event, d) {
+        console.log(d)
+        event.target.style.fill = 'goldenrod';
+        const [mouseX, mouseY] = d3.pointer(event);
+        d3.select(tooltip).style("opacity", 1)
+            .style("left", `${600+mouseX}px`)
+            .style("top", `${150}px`)
+            .html(`<strong>${x}:</strong> ${formatNumber(d.x)}<br/><strong>${y? y:'Count'}</strong> ${d.y}`);
+    }
+
+    function hideTooltip(event) {
+        d3.select(tooltip).style("opacity", 0);
+        event.target.style.fill = 'grey';
+    }
+    
 
     let tempCriteria = ['Topic alignment',
                     'Comprehensive Coverage',
@@ -132,13 +148,13 @@
             d3.select(yAxis)
                 .call(d3.axisLeft(yScale).tickFormat(formatNumber))
                 .append('text')
-                .text(y)
+                .text(y ? y : 'Count')
                 .style("font-size", "11px")
                 .style("font-weight", "bold")
                 .style("fill", "black")
                 .attr('transform', 'rotate(-90)')
                 .attr('x', -chartH/2 + 60)
-                .attr('y', -38);;
+                .attr('y', -38);
         }
     //$: console.log(fullData[0]['mentioned']);
   
@@ -152,7 +168,9 @@
                     x={xScale(d.x)+4} 
                     y={yScale(d.y)}
                     width={chartW/xScale.domain().length-8}
-                    height={chartH - yScale(d.y)}/>
+                    height={chartH - yScale(d.y)}
+                    on:mouseover={(event) => showTooltip(event, d)}
+                    on:mouseout={(event) => hideTooltip(event)}/>
             {/each}
             <!-- {console.log(partialBarData)} -->
             <!-- {#each partialBarData as d, i}
@@ -181,6 +199,7 @@
         <g transform="translate({margin.left}, {margin.top})"
             bind:this={yAxis} />
       </svg>
+      <div class="tooltip" bind:this={tooltip}></div>
 </main>
 
 <style>
@@ -193,7 +212,19 @@
 
     .backgroundbar {
         fill: grey;
-        opacity: 1;
+        opacity: 0.7;
+    }
+
+    .tooltip {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        pointer-events: none;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
     }
 
 

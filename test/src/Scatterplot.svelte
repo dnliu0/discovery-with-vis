@@ -18,6 +18,7 @@
     let brushLayer;
     let xAxis;
     let yAxis;
+    let tooltip;
 
     const formatNumber = (value) => {
         if (value >= 1000) {
@@ -25,6 +26,24 @@
         }
         return value;
     }
+    function showTooltip(event, d) {
+        console.log(d)
+        const [mouseX, mouseY] = d3.pointer(event);
+        d3.select(tooltip).style("opacity", 1)
+            .style("left", `${600+mouseX}px`)
+            .style("top", `${150}px`)
+            .html(`<strong>${x}:</strong> ${formatNumber(d[x])}<br/><strong>${y? y:'Count'}</strong> ${formatNumber(d[y])}`);
+        event.target.style.fill = 'goldenrod';
+        event.target.style.r = '7';
+        console.log(event.target.style)
+    }
+
+    function hideTooltip(event) {
+        d3.select(tooltip).style("opacity", 0);
+        event.target.style.fill = 'grey';
+        event.target.style.r = '4';
+    }
+    
 
     // const brush = d3.brushX()
     //     .extent([[0, 0], [chartW, chartH]])
@@ -87,7 +106,9 @@
                 <circle class = "backgroundbar"
                     cx={xScale(d[x])} 
                     cy={yScale(d[y])}
-                    r="4"/>
+                    r="4"
+                    on:mouseover={(event) => showTooltip(event, d)}
+                    on:mouseout={(event) => hideTooltip(event)}/>
             {/each}
             <!-- {#each data as d, i}
                 <circle class = "bar"
@@ -107,6 +128,7 @@
         <g transform="translate({margin.left}, {margin.top})"
             bind:this={yAxis} />
       </svg>
+      <div class="tooltip" bind:this={tooltip}></div>
 </main>
 
 <style>
@@ -120,5 +142,17 @@
     .backgroundbar {
         fill: grey;
         opacity: 0.7;
+    }
+
+    .tooltip {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        pointer-events: none;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
     }
  </style>
