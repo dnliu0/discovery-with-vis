@@ -251,7 +251,7 @@ if (output) {
     searchOutput={searchOutput} />
   </div>
   <div class="talk-history">
-    <h3>Talk History</h3>
+    <h3>Search History</h3>
     <div class="history-list">
       {#each history as item}
         <div class={`history-item ${item.role}`}>

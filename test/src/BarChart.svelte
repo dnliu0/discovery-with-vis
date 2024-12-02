@@ -33,7 +33,7 @@
         d3.select(tooltip).style("opacity", 1)
             .style("left", `${600+mouseX}px`)
             .style("top", `${150}px`)
-            .html(`<strong>${x}:</strong> ${formatNumber(d.x)}<br/><strong>${y? y:'Count'}</strong> ${d.y}`);
+            .html(`<strong>${x}:</strong> ${formatNumber(d.x)}<br/><strong>${y? y:'Count'}</strong> ${formatNumber(d.y)}`);
     }
 
     function hideTooltip(event) {

@@ -113,12 +113,12 @@
                         />
                     </div>
                     {:else}
-                        {#if Array.from(new Set(data.map(d => d[strArr[i]]))).length <= 25}
+                        {#if Array.from(new Set(data.map(d => d[searchOutput["0"].attributes[0]]))).length <= 25}
                         <div class="histogram-item"> 
                             <BarChart
                                 data={data} 
                                 fullData={fullData} 
-                                x={strArr[i]} 
+                                x={searchOutput["0"].attributes[0]} 
                                 y={''} 
                                 searchOutput={searchOutput}
                             />

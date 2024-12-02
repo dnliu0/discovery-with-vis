@@ -50,7 +50,6 @@
        
     // }
     function showTooltip(event, d) {
-        console.log("y")
         event.target.style.fill = 'goldenrod';
         const [mouseX, mouseY] = d3.pointer(event);
         d3.select(tooltip).style("opacity", 1)
