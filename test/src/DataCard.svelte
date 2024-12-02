@@ -97,41 +97,65 @@
                                 y={numArr[j]} 
                                 searchOutput={searchOutput}
                             />
-                            
                         </div>
                     {/if}  
                 {/each}
             {/each}
             {:else}
-            {#if searchOutput["0"].types.includes("Q")}
-                {#if searchOutput["0"].types.filter(type => type === "Q").length === 2}
-                <div class="histogram-item">
-                    <Scatterplot 
-                        data={data} 
-                        fullData={fullData} 
-                        x={searchOutput["0"].attributes[0]} 
-                        y={searchOutput["0"].attributes[1]} 
-                    />
-                </div>
-                <div class="histogram-item">
-                    <Scatterplot 
-                        data={data} 
-                        fullData={fullData} 
-                        x={searchOutput["0"].attributes[1]} 
-                        y={searchOutput["0"].attributes[0]} 
-                    />
-                </div>
-                {:else}
-                    <div class="histogram-item"> 
-                        <BarChart
+                {#if searchOutput["0"].types.length === 1}
+                    {#if searchOutput["0"].types[0] === "Q"}
+                    <div class="histogram-item">
+                        <Histogram 
                             data={data} 
                             fullData={fullData} 
-                            x={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0]} 
-                            y={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q")]} 
+                            x={searchOutput["0"].attributes[0]} 
+                            searchOutput={searchOutput}
                         />
                     </div>
+                    {:else}
+                        {#if Array.from(new Set(data.map(d => d[strArr[i]]))).length <= 25}
+                        <div class="histogram-item"> 
+                            <BarChart
+                                data={data} 
+                                fullData={fullData} 
+                                x={strArr[i]} 
+                                y={''} 
+                                searchOutput={searchOutput}
+                            />
+                        </div>
+                        {/if}
+                    {/if} 
+                {:else if searchOutput["0"].types.length === 2}
+                    {#if searchOutput["0"].types.filter(type => type === "Q").length === 2}
+                    <div class="histogram-item">
+                        <Scatterplot 
+                            data={data} 
+                            fullData={fullData} 
+                            x={searchOutput["0"].attributes[0]} 
+                            y={searchOutput["0"].attributes[1]} 
+                        />
+                    </div>
+                    <div class="histogram-item">
+                        <Scatterplot 
+                            data={data} 
+                            fullData={fullData} 
+                            x={searchOutput["0"].attributes[1]} 
+                            y={searchOutput["0"].attributes[0]} 
+                        />
+                    </div>
+                    {:else}
+                        <div class="histogram-item"> 
+                            <BarChart
+                                data={data} 
+                                fullData={fullData} 
+                                x={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0]} 
+                                y={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q")]} 
+                            />
+                        </div>
+                    {/if}
+                {:else if searchOutput["0"].types.length > 2}
+                <p>The system is currently limited to visualizing only two variables at a time.</p>
                 {/if}
-            {/if}
                 <!-- {#if searchOutput["0"].attributes[0] && searchOutput["0"].types[0] === "Q"}
                         {#if searchOutput["0"].attributes[1]  && searchOutput["0"].types[0] === "Q"}
                             <div class="histogram-item">
