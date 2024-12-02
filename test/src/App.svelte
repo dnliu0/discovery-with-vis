@@ -96,12 +96,10 @@ if (output) {
         const closingBraceCount = (jsonString.match(/}/g) || []).length;
 
         if (openingBraceCount > closingBraceCount) {
-          // Remove the first extra `{` if there's an imbalance
           jsonString = jsonString.replace(/^{/, '');
         }
         console.log(jsonString);
-        // const parsedJSON = JSON.parse(jsonString); // Parse the JSON string
-        // console.log("Extracted JSON:", parsedJSON);
+        
       } 
 }
 }
@@ -132,16 +130,15 @@ if (output) {
             count += 1;
           }
         });
-        // data[i]['count'] = count;
-        // data[i]['numCount'] = numCount;
-        // data[i]['strCount'] = count - numCount;
-        // data[i]['numArr'] = numArr;
-        // data[i]['strArr'] = strArr;
+        
       }
       Object.keys(table[0]).forEach(o => {
         if (+table[0][o]) {
-          numCount += 1;
-          numArr.push(o);
+          if (o !== 'Release Year') {
+            numCount += 1;
+            numArr.push(o);
+          }
+          
         } else {
           strCount += 1;
           strArr.push(o);
