@@ -135,14 +135,14 @@
                             y={searchOutput["0"].attributes[1]} 
                         />
                     </div>
-                    <div class="histogram-item">
+                    <!-- <div class="histogram-item">
                         <Scatterplot 
                             data={data} 
                             fullData={fullData} 
                             x={searchOutput["0"].attributes[1]} 
                             y={searchOutput["0"].attributes[0]} 
                         />
-                    </div>
+                    </div> -->
                     {:else}
                         <div class="histogram-item"> 
                             {#if Array.from(new Set(data.map(d => d[searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0]]))).length <= 25}
