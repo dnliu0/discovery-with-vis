@@ -17,6 +17,9 @@ Dataset: The embedded dataset used is (https://raw.githubusercontent.com/nl4dv/n
 
 
 Type queries into the search box to specify the visualization you want to see.
-One Valid Example: "Show me the relationship between budget and worldwide gross."
+Some Valid Examples: 
+1. "Show me the relationship between budget and worldwide gross."
+2. "What is the distribution of budget?"
+3. "Show me the distribution of movie genre."
 
 The system supports queries for visualizing up to two columns, similar to its default visualization functionality.
