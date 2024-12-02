@@ -52,9 +52,7 @@
         .range([0, chartW])
         .domain([0, d3.max(fullData, (d) => d[x])]);
     $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(fullData, (d) => d[y])])
-    // $: lineGenerator = line()
-    //     .x(d => xScale(d.x))
-    //     .y(d => yScale(d.y));
+   
     $: {	
             if (searchOutput) {
                 d3.selectAll("text").remove();
