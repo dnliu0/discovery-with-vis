@@ -9,8 +9,6 @@
   import DataCard from './DataCard.svelte';
 
   import OpenAI from "openai";
-  console.log(import.meta.env.VITE_OPENAI_API_KEY)
-
 
 	let data = [];
   let fullData = [];
@@ -58,6 +56,7 @@
                     'Access Terms'];
   // ['Source reputation', 'User reviews', 'Metadata', 'Data collection conditions', 'Prevalence of missing data', 'Ability to access full datasets', 'Sample Data', 'Visualizations'];
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+
 const openai = new OpenAI({
   apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true
 });

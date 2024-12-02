@@ -103,7 +103,36 @@
                 {/each}
             {/each}
             {:else}
-                {#if searchOutput["0"].attributes[0] && searchOutput["0"].types[0] === "Q"}
+            {#if searchOutput["0"].types.includes("Q")}
+                {#if searchOutput["0"].types.filter(type => type === "Q").length === 2}
+                <div class="histogram-item">
+                    <Scatterplot 
+                        data={data} 
+                        fullData={fullData} 
+                        x={searchOutput["0"].attributes[0]} 
+                        y={searchOutput["0"].attributes[1]} 
+                    />
+                </div>
+                <div class="histogram-item">
+                    <Scatterplot 
+                        data={data} 
+                        fullData={fullData} 
+                        x={searchOutput["0"].attributes[1]} 
+                        y={searchOutput["0"].attributes[0]} 
+                    />
+                </div>
+                {:else}
+                    <div class="histogram-item"> 
+                        <BarChart
+                            data={data} 
+                            fullData={fullData} 
+                            x={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q") === 0 ? 1 : 0]} 
+                            y={searchOutput["0"].attributes[searchOutput["0"].types.indexOf("Q")]} 
+                        />
+                    </div>
+                {/if}
+            {/if}
+                <!-- {#if searchOutput["0"].attributes[0] && searchOutput["0"].types[0] === "Q"}
                         {#if searchOutput["0"].attributes[1]  && searchOutput["0"].types[0] === "Q"}
                             <div class="histogram-item">
                                 <Scatterplot 
@@ -124,7 +153,7 @@
                         </div>
                         {/if}
                         
-                {/if}
+                {/if} -->
             {/if}
         </div>
        
