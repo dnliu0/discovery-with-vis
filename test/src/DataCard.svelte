@@ -190,24 +190,22 @@
 </main>
 
 <style>
-    /* Main container for horizontal scrolling */
     .scroll-container {
         display: flex;
         flex-direction: row;
-        gap: 16px; /* Spacing between items */
+        gap: 16px; 
         overflow-x: auto;
         padding: 10px;
         border: 1px solid #ccc;
     }
 
-    /* Styling for Summary container */
     .summary-container {
         flex-shrink: 0;
         width: 300px; 
-        min-height: 120px; /* Ensure space for at least 6 lines of text */
+        min-height: 120px; 
         padding: 10px;
         white-space: normal;
-        box-sizing: border-box; /* Include padding in total dimensions */
+        box-sizing: border-box;
         border: 1px solid #ddd;
     }
 
@@ -215,18 +213,16 @@
     .histograms-container {
         display: flex;
         flex-direction: row;
-        flex-wrap: nowrap; /* Ensure all histograms stay in one row */
+        flex-wrap: nowrap; 
         gap: 16px;
     }
 
-    /* Each histogram item */
     .histogram-item {
         flex-shrink: 0;
-        width: 400px; /* Set a consistent width for each histogram */
-        height: 200px; /* Adjust height as needed */
+        width: 400px;
+        height: 200px;
     }
 
-    /* Optional styles for smoother scrolling */
     .scroll-container::-webkit-scrollbar {
         height: 8px;
     }

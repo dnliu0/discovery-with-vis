@@ -42,29 +42,6 @@
     }
     
 
-    let tempCriteria = ['Topic alignment',
-                    'Comprehensive Coverage',
-                    'Required Attribute',
-                    'Data Ranges',
-                    'Patterns',
-                    'Granularity',
-                    'Collection Timeframe',
-                    'Update Frequency',
-                    'Composition of Data Fields',
-                    'Sample Data',
-                    'Methods Used',
-                    'Good Practices Adherence',
-                    'Unusable Data',
-                    'Completeness',
-                    'Access to the Full Dataset',
-                    'Suitable Format',
-                    'High Quality Supplements',
-                    'Data Provider Communication',
-                    'Reputable Source',
-                    'Recommendations',
-                    'Popular Dataset',
-                    'Methods Comply with Legal Requirements',
-                    'Access Terms'];
 
     function makeData(data) {
         let barData = [];
@@ -109,23 +86,8 @@
     
     $: xScale = d3.scaleBand(Array.from(new Set(barData.map(d => d.x))), [0, chartW]);
     $: barData = y ? makeData2(fullData) : makeData(fullData);
-    // $: partialBarData = makeData(data);
-    // $: console.log(partialBarData)
-    // d3.scaleLinear()
-    //     .range([0, chartW])
-    //     .domain([0, fullData.length]);
-    // $: binData = d3.histogram()
-    //     .value((d) => d['mentioned'])
-    //     .domain(xScale.domain())
-        // .thresholds(xScale.ticks(10));
-    // $: backgroundBins = binData(fullData);
-    // $: bins = binData(data);
-    // $: yScale = d3.scaleLinear()
-    //     .range([chartH, 0])
-    //     .domain([0, d3.max(backgroundBins, (d) => d.length)]);
 
     $: yScale = d3.scaleLinear().range([chartH, 0]).domain([0, d3.max(y ? makeData2(fullData) : makeData(fullData), (d) => d.y)])
-    // $: console.log(d3.max(makeData(fullData), (d) => d.y))
     $: {	
             // d3.select(brushLayer)
             //     .call(brush);
@@ -172,21 +134,6 @@
                     on:mouseover={(event) => showTooltip(event, d)}
                     on:mouseout={(event) => hideTooltip(event)}/>
             {/each}
-            <!-- {console.log(partialBarData)} -->
-            <!-- {#each partialBarData as d, i}
-                <rect class = "bar"
-                    x={7 + xScale(d.criterion)} 
-                    y={yScale(d.count)}
-                    width={24}
-                    height={chartH - yScale(d.count)}/>
-            {/each} -->
-            <!-- {#each fullData as d, i}
-                <rect class = "bar"
-                    x={xScale(i)} 
-                    y={yScale(d.count)}
-                    width={xScale(i)-xScale(i-1)}
-                    height={chartH - yScale(d.count)}/>
-            {/each} -->
             
         </g>
 

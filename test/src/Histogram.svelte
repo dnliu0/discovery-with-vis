@@ -111,18 +111,6 @@
 <main>
     <svg {width} {height}>
         <g transform="translate({margin.left}, {margin.top})">
-            <!-- {#each fullData as d, i}
-                <circle class = "bar"
-                    cx={xScale(i)} 
-                    cy={yScale(d.count)}
-                    r="6"/>
-            {/each}
-            {#each fullData as d, i}
-                <circle class = "backgroundbar"
-                    cx={xScale(i)} 
-                    cy={yScale(d.count)}
-                    r="6"/>
-            {/each} -->
             {#each backgroundBins as d, i}
                 <rect class = "backgroundbar"
                 x={xScale(d.x0)} 
@@ -132,13 +120,6 @@
                 on:mouseover={(event) => showTooltip(event, d)}
                 on:mouseout={(event) => hideTooltip(event)}/>
             {/each}
-            <!-- {#each fullData as d, i}
-                <rect class = "bar"
-                    x={xScale(i)} 
-                    y={yScale(d.count)}
-                    width={xScale(i)-xScale(i-1)}
-                    height={chartH - yScale(d.count)}/>
-            {/each} -->
             
         </g>
 

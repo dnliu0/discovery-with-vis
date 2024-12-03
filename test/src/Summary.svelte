@@ -12,10 +12,10 @@
     width: auto;
     font-size: 14px;
     text-align: left;
-    display: -webkit-box;       /* Flexbox-based box model */
-    -webkit-box-orient: vertical; /* Sets the box's orientation to vertical */
-    overflow: hidden;           /* Hides overflowed content */
-    text-overflow: ellipsis;    /* Adds ellipsis for overflow */
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    overflow: hidden;          
+    text-overflow: ellipsis;    
     -webkit-line-clamp: 9;
   }
   
